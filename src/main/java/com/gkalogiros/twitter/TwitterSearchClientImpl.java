@@ -1,6 +1,7 @@
 package com.gkalogiros.twitter;
 
 import com.gkalogiros.models.Tweet;
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.twitter.hbc.ClientBuilder;
 import com.twitter.hbc.core.Client;
@@ -59,20 +60,15 @@ public class TwitterSearchClientImpl implements TwitterSearchClient {
     public void startStreamWithFilter(String term) {
         /** Define some search Terms */
         List<String> terms = Lists.newArrayList(term);
-        endpoint.trackTerms(terms);
 
-        ClientBuilder builder = new ClientBuilder()
-                .name(CLIENT_NAME)
-                .hosts(hosebirdHosts)
-                .authentication(authentication())
-                .endpoint(endpoint)
-                .processor(new StringDelimitedProcessor(msgQueue));
-
-        /* Construct Twitter Streaming API Client */
-        client = builder.build();
-
-        /* Connect to Stream */
-        client.connect();
+        if (!Strings.isNullOrEmpty(term))
+        {
+            startTrackingTerms(terms);
+        }
+        else
+        {
+            System.err.println("You haven't provided a search term!");
+        }
     }
 
     @Override
@@ -94,6 +90,24 @@ public class TwitterSearchClientImpl implements TwitterSearchClient {
      * PRIVATE
      * ====================================================================================================
      */
+    private void startTrackingTerms(List terms)
+    {
+        endpoint.trackTerms(terms);
+
+        ClientBuilder builder = new ClientBuilder()
+                .name(CLIENT_NAME)
+                .hosts(hosebirdHosts)
+                .authentication(authentication())
+                .endpoint(endpoint)
+                .processor(new StringDelimitedProcessor(msgQueue));
+
+            /* Construct Twitter Streaming API Client */
+        client = builder.build();
+
+            /* Connect to Stream */
+        client.connect();
+    }
+
     private Authentication authentication()
     {
         return new OAuth1(
