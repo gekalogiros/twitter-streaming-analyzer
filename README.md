@@ -5,15 +5,17 @@ This is a simple application that makes use of Apache Lucene and Twitter's Strea
 
 ## Get Started
 
-1. Download project from GitHub.
-2. Connect to a wifi/LAN network.
-3. Open code in Intellij or Eclipse
-4. Update the file app.properties with the following security details (Please visit Twitter's dev portal for more details about how you can obtain these):
+1. Download Distribution directory.
+2. Connect to a Wifi/LAN network.
+3. Update the file app.properties with the following security details (Please visit Twitter's dev portal for more details about how you can obtain these):
    1. App Token
    2. App Secret
    3. Consumer Key
    4. Consumer Secret	 
-5. Run main() method in com.gkalogiros.main.Main
+4. On Windows
+   * Double-click twitter-search-example.cmd if you are on Windows.
+5. On Linux
+   * Open Console in distribution folder and execute "bash twitter-search-example.sh 
 6. Check console Output.
 
 ## Details
