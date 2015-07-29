@@ -8,6 +8,12 @@ import org.apache.lucene.store.Directory;
 
 import java.io.IOException;
 
+/**
+ * This is a top level class representing a Lucene Query.
+ * You can create custom Lucene Queries by inheriting the current
+ * class.
+ * @param <T>
+ */
 public abstract class LuceneQuery<T> {
 
     /*
