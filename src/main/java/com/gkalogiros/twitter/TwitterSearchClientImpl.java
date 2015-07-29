@@ -20,26 +20,31 @@ public class TwitterSearchClientImpl implements TwitterSearchClient {
 
     /*
      * ====================================================================================================
+     * CONSTANTS
+     * ====================================================================================================
+     */
+    private static final String CLIENT_NAME = "twitter-search-example";
+    private static final int QUEUE_SIZE = 100000;
+
+    /*
+     * ====================================================================================================
      * INSTANCE VARIABLES
      * ====================================================================================================
      */
-
-    /** Set up your blocking queues: Be sure to size these properly based on expected TPS of your stream */
-    BlockingQueue<String> msgQueue;
+    private BlockingQueue<String> msgQueue;
 
     /** Declare the host you want to connect to, the endpoint, and authentication (basic auth or oauth) */
-    Hosts hosebirdHosts;
+    private Hosts hosebirdHosts;
 
     /** Stream Endpoint */
-    StatusesFilterEndpoint endpoint;
+    private StatusesFilterEndpoint endpoint;
 
-    /** Client onject */
-    Client client;
+    /** Client for accessing Twitter's Streaming api */
+    private Client client;
 
     public TwitterSearchClientImpl()
     {
-        TwitterProperties.instance();
-        msgQueue = new LinkedBlockingQueue<String>(100000);
+        msgQueue = new LinkedBlockingQueue<String>(QUEUE_SIZE);
         hosebirdHosts = new HttpHosts(Constants.STREAM_HOST);
         endpoint = new StatusesFilterEndpoint();
     }
@@ -52,13 +57,12 @@ public class TwitterSearchClientImpl implements TwitterSearchClient {
 
     @Override
     public void startStreamWithFilter(String term) {
-
         /** Define some search Terms */
-        List<String> terms = Lists.newArrayList("Greece");
+        List<String> terms = Lists.newArrayList(term);
         endpoint.trackTerms(terms);
 
         ClientBuilder builder = new ClientBuilder()
-                .name("Kahoot Test")
+                .name(CLIENT_NAME)
                 .hosts(hosebirdHosts)
                 .authentication(authentication())
                 .endpoint(endpoint)
@@ -93,12 +97,11 @@ public class TwitterSearchClientImpl implements TwitterSearchClient {
     private Authentication authentication()
     {
         return new OAuth1(
-                TwitterProperties.consumerKey, // Consumer-key
+                TwitterProperties.consumerKey,    // Consumer-key
                 TwitterProperties.consumerSecret, // Consumer-Secret
-                TwitterProperties.appToken, // app token
-                TwitterProperties.appSecret); // app secret
+                TwitterProperties.appToken,       // app token
+                TwitterProperties.appSecret);     // app secret
     }
-
 
     /*
      * ====================================================================================================

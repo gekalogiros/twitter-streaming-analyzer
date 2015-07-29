@@ -6,16 +6,7 @@ import java.util.Properties;
 public class TwitterProperties {
 
     static private TwitterProperties instance = null;
-
-    static public String appToken = null;
-    static public String appSecret = null;
-    static public String consumerKey = null;
-    static public String consumerSecret = null;
-
-    static
-    {
-
-    }
+    static public String appToken, appSecret, consumerKey, consumerSecret, searchTerm;
 
     private TwitterProperties()
     {
@@ -25,10 +16,7 @@ public class TwitterProperties {
             InputStream is = classloader.getResourceAsStream("app.properties");
             Properties props = new Properties();
             props.load(is);
-            appToken = props.getProperty("app.token");
-            appSecret = props.getProperty("app.secret");
-            consumerKey = props.getProperty("consumer.key");
-            consumerSecret = props.getProperty("consumer.secret");
+            parseProperties(props);
         }
         catch(Exception e)
         {
@@ -36,11 +24,21 @@ public class TwitterProperties {
         }
     }
 
-    static public TwitterProperties instance(){
-        if (instance == null) {
+    private void parseProperties(Properties props)
+    {
+        appToken = props.getProperty("app.token");
+        appSecret = props.getProperty("app.secret");
+        consumerKey = props.getProperty("consumer.key");
+        consumerSecret = props.getProperty("consumer.secret");
+        searchTerm = props.getProperty("search.term");
+    }
+
+    static public TwitterProperties instance()
+    {
+        if (instance == null)
+        {
             instance = new TwitterProperties();
         }
         return instance;
     }
-
 }

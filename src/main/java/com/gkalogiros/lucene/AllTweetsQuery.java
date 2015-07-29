@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * This class inherits from {@link com.gkalogiros.lucene.LuceneQuery}.
- * This class represents a Lucene query that can be fed to
+ * An instance of this class can be used as an input to
  * {@link com.gkalogiros.store.Store#retrieve(LuceneQuery)}.
  */
 public class AllTweetsQuery extends LuceneQuery<List<Tweet>> {

@@ -1,6 +1,5 @@
 package com.gkalogiros.main;
 
-import com.gkalogiros.exceptions.IndexHasNotBeenSetException;
 import com.gkalogiros.lucene.AllTweetsQuery;
 import com.gkalogiros.lucene.LuceneQuery;
 import com.gkalogiros.lucene.StatsDateRangeQuery;
@@ -11,22 +10,28 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Collection;
 import java.util.Date;
 
+/**
+ * This is a class that queries the Lucene index every
+ * 5 seconds and gets back useful statistics about the
+ * tweet messages that have been indexed.
+ */
 public class Monitoring implements Runnable {
 
     /*
      * ====================================================================================================
-     * GLOBAL VARIABLES
+     * CONSTANTS
      * ====================================================================================================
      */
-    private static final int MILLIS = 1000;
-    private static final int SECONDS = 60;
-    private static final int MINUTES_IN_MILLIS = SECONDS * MILLIS;
 
+    private static final String SEPARATOR = "---------------------------------------------------------------------";
     private static final String TOTAL_NUMBER_OF_DOCUMENTS = "Total number of tweets so far is: ";
     private static final String TOTAL_NUMBER_OF_TWEETS_MSG = "Total number of tweets matching the search term in the last %d minutes: %d";
     private static final String MOST_FREQUENT_TERMS_MSG = "Most frequent terms in the last %d minutes are: %s";
     private static final String MOST_ACTIVE_TWEEPS_MSG = "Most active Tweeps in the last %d minutes are: %s";
-    private static final String SEPARATOR = "---------------------------------------------------------------------";
+
+    private static final int MILLIS = 1000;
+    private static final int SECONDS = 60;
+    private static final int MINUTES_IN_MILLIS = SECONDS * MILLIS;
 
     private Store store;
 
@@ -53,7 +58,7 @@ public class Monitoring implements Runnable {
             try
             {
                 extractTotalDocStats();
-                extractDetailedStatsForCurrTimeInterval();
+                extractDetailedStats();
             }
             catch(Exception e2) // The index is not ready yet.
             {
@@ -77,7 +82,7 @@ public class Monitoring implements Runnable {
         print(TOTAL_NUMBER_OF_DOCUMENTS + total.size());
     }
 
-    private void extractDetailedStatsForCurrTimeInterval()
+    private void extractDetailedStats()
     {
         Integer[] intervals = new Integer[]{1,5,15};
 
@@ -92,11 +97,8 @@ public class Monitoring implements Runnable {
 
             // Print results to screen
             print(message(TOTAL_NUMBER_OF_TWEETS_MSG, minutes, stats15.getTotalTweets()));
-
             print(message(MOST_FREQUENT_TERMS_MSG, minutes, StringUtils.join(stats15.getMostFrequentTerms(10))));
-
             print(message(MOST_ACTIVE_TWEEPS_MSG, minutes, StringUtils.join(stats15.getMostFrequentUsernames(10))));
-
             print(SEPARATOR);
         }
     }

@@ -4,16 +4,17 @@ import com.gkalogiros.models.Tweet;
 import com.gkalogiros.store.InMemoryStoreImpl;
 import com.gkalogiros.store.Store;
 import com.gkalogiros.twitter.TwitterProperties;
+import com.gkalogiros.twitter.TwitterSearchClient;
 import com.gkalogiros.twitter.TwitterSearchClientImpl;
 import com.gkalogiros.utils.TwitterUtils;
 import org.json.simple.parser.ParseException;
 
 public class App {
 
-    public static final String TERM = "Holidays";
-
+    private static final TwitterProperties props = TwitterProperties.instance();
+    private static final String TERM = TwitterProperties.searchTerm;
     private Store<Tweet> store;
-    private TwitterSearchClientImpl client;
+    private TwitterSearchClient client;
 
     public App()
     {
