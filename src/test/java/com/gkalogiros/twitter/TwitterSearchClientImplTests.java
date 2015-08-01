@@ -1,5 +1,6 @@
 package com.gkalogiros.twitter;
 
+import com.gkalogiros.apis.TwitterSearchClientImpl;
 import org.json.simple.parser.ParseException;
 import org.junit.Test;
 import static org.junit.Assert.*;

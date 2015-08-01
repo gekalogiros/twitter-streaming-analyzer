@@ -15,22 +15,26 @@ public class Statistics {
 
     private Collection<Entry<String>> terms, usernames;
     private Integer totalTweets;
+    private double sentiment;
 
     public Statistics()
     {
         this.usernames = Lists.newArrayList();
         this.terms = Lists.newArrayList();
         this.totalTweets = 0;
+        this.sentiment = 0;
     }
 
     public Statistics(
             final Collection<Entry<String>> usernames,
             final Collection<Entry<String>> terms,
-            final int tweets)
+            final int tweets,
+            final double sentiment)
     {
         this.usernames = usernames;
         this.terms = terms;
         this.totalTweets = tweets;
+        this.sentiment = sentiment;
     }
 
     public Collection<Entry<String>> getTerms() {
@@ -64,5 +68,13 @@ public class Statistics {
 
     public void setTotalTweets(Integer tweets) {
         this.totalTweets = tweets;
+    }
+
+    public double getSentiment() {
+        return sentiment;
+    }
+
+    public void setSentiment(double sentiment) {
+        this.sentiment = sentiment;
     }
 }

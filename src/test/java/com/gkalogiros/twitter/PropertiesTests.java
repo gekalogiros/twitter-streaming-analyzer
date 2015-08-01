@@ -1,5 +1,6 @@
 package com.gkalogiros.twitter;
 
+import com.gkalogiros.utils.AppProperties;
 import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 
@@ -7,11 +8,11 @@ public class PropertiesTests {
 
     @Test
     public void thatPropertiesCanBeLoader(){
-        TwitterProperties props = TwitterProperties.instance();
-        assertTrue(TwitterProperties.appToken.equalsIgnoreCase(""));
-        assertTrue(TwitterProperties.appSecret.equalsIgnoreCase(""));
-        assertTrue(TwitterProperties.consumerKey.equalsIgnoreCase(""));
-        assertTrue(TwitterProperties.consumerSecret.equalsIgnoreCase(""));
+        AppProperties props = AppProperties.instance();
+        assertTrue(AppProperties.appToken.equalsIgnoreCase(""));
+        assertTrue(AppProperties.appSecret.equalsIgnoreCase(""));
+        assertTrue(AppProperties.consumerKey.equalsIgnoreCase(""));
+        assertTrue(AppProperties.consumerSecret.equalsIgnoreCase(""));
 
     }
 }

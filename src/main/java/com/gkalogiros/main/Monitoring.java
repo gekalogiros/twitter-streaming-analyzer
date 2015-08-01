@@ -28,6 +28,7 @@ public class Monitoring implements Runnable {
     private static final String TOTAL_NUMBER_OF_TWEETS_MSG = "Total number of tweets matching the search term in the last %d minutes: %d";
     private static final String MOST_FREQUENT_TERMS_MSG = "Most frequent terms in the last %d minutes are: %s";
     private static final String MOST_ACTIVE_TWEEPS_MSG = "Most active Tweeps in the last %d minutes are: %s";
+    private static final String TWEET_SENTIMENT = "The sentiment of the tweets in the last %d minutes is: %s";
 
     private static final int MILLIS = 1000;
     private static final int SECONDS = 60;
@@ -93,12 +94,13 @@ public class Monitoring implements Runnable {
 
             // Query Lucene Index and Retrieve Statistics
             LuceneQuery<Statistics> query = new StatsDateRangeQuery(start, new Date());
-            Statistics stats15 = (Statistics) store.retrieve(query);
+            Statistics stats = (Statistics) store.retrieve(query);
 
             // Print results to screen
-            print(message(TOTAL_NUMBER_OF_TWEETS_MSG, minutes, stats15.getTotalTweets()));
-            print(message(MOST_FREQUENT_TERMS_MSG, minutes, StringUtils.join(stats15.getMostFrequentTerms(10))));
-            print(message(MOST_ACTIVE_TWEEPS_MSG, minutes, StringUtils.join(stats15.getMostFrequentUsernames(10))));
+            print(message(TOTAL_NUMBER_OF_TWEETS_MSG, minutes, stats.getTotalTweets()));
+            print(message(MOST_FREQUENT_TERMS_MSG, minutes, StringUtils.join(stats.getMostFrequentTerms(10))));
+            print(message(MOST_ACTIVE_TWEEPS_MSG, minutes, StringUtils.join(stats.getMostFrequentUsernames(10))));
+            print(message(TWEET_SENTIMENT, minutes, stats.getSentiment()));
             print(SEPARATOR);
         }
     }

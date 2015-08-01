@@ -32,7 +32,7 @@ The terms tokenization is done by Lucene's Standard Analyzer. The Standard Analy
 
 
 ## Improvements
-1. Use sentiment analysis for printing out the sentiment of the tweets published in the last 1,5 and 15 minutes.
+1. In sentiment analysis use BigDecimal objects rather than plain double primitives. This will produce a better precision.
 2. The project uses an In-memory Lucene index for storing tweet messages. If the available memory is limited then the in memory index can store a limited number of tweets too.
 3. Use multiple threads when writing to/reading from the index.
 4. Create RESTful APIs for querying the data.

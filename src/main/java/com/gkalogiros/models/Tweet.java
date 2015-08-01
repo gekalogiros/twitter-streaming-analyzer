@@ -1,5 +1,7 @@
 package com.gkalogiros.models;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Date;
 
 /**
@@ -10,12 +12,15 @@ public class Tweet {
     private String username;
     private Date date;
     private String content;
+    private double score;
 
     public Tweet(String username, Date date, String content) {
         this.username = username;
         this.date = date;
         this.content = content;
     }
+
+    public Tweet() {}
 
     public Boolean isValid()
     {
@@ -24,6 +29,10 @@ public class Tweet {
         if (null == date) return false;
 
         return true;
+    }
+
+    public String getEncodedContent() throws UnsupportedEncodingException {
+        return URLEncoder.encode(content, "UTF-8");
     }
 
     @Override
@@ -57,5 +66,13 @@ public class Tweet {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public double getScore() {
+        return score;
+    }
+
+    public void setScore(double score) {
+        this.score = score;
     }
 }

@@ -1,6 +1,7 @@
-package com.gkalogiros.twitter;
+package com.gkalogiros.apis;
 
 import com.gkalogiros.models.Tweet;
+import com.gkalogiros.utils.AppProperties;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.twitter.hbc.ClientBuilder;
@@ -12,7 +13,12 @@ import com.twitter.hbc.core.endpoint.StatusesFilterEndpoint;
 import com.twitter.hbc.core.processor.StringDelimitedProcessor;
 import com.twitter.hbc.httpclient.auth.Authentication;
 import com.twitter.hbc.httpclient.auth.OAuth1;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -24,9 +30,14 @@ public class TwitterSearchClientImpl implements TwitterSearchClient {
      * CONSTANTS
      * ====================================================================================================
      */
+    private static final String DATE_FORMAT = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
     private static final String CLIENT_NAME = "twitter-search-example";
-    private static final int QUEUE_SIZE = 100000;
+    private static final String TEXT = "text";
+    private static final String CREATED_AT = "created_at";
+    private static final String USER = "user";
+    private static final String NAME = "name";
 
+    private static final int QUEUE_SIZE = 100000;
     /*
      * ====================================================================================================
      * INSTANCE VARIABLES
@@ -80,9 +91,22 @@ public class TwitterSearchClientImpl implements TwitterSearchClient {
     }
 
     @Override
-    public List<Tweet> search(String term) {
+    public Tweet getTweetFromJson(String tweet) throws ParseException, java.text.ParseException {
+        JSONParser parser = new JSONParser();
 
-        return null;
+        // Tweet Message
+        JSONObject json = (JSONObject) parser.parse(tweet);
+        String text = (String) json.get(TEXT);
+        String twitterDate = (String) json.get(CREATED_AT);
+
+        // User ID
+        JSONObject user = (JSONObject) json.get(USER);
+        String userName = (String) user.get(NAME);
+
+        // Date created
+        Date date = convertTwitterToJavaDate(twitterDate);
+
+        return new Tweet(userName, date, text);
     }
 
     /*
@@ -111,10 +135,16 @@ public class TwitterSearchClientImpl implements TwitterSearchClient {
     private Authentication authentication()
     {
         return new OAuth1(
-                TwitterProperties.consumerKey,    // Consumer-key
-                TwitterProperties.consumerSecret, // Consumer-Secret
-                TwitterProperties.appToken,       // app token
-                TwitterProperties.appSecret);     // app secret
+                AppProperties.consumerKey,    // Consumer-key
+                AppProperties.consumerSecret, // Consumer-Secret
+                AppProperties.appToken,       // app token
+                AppProperties.appSecret);     // app secret
+    }
+
+    public static Date convertTwitterToJavaDate(String twitterDate) throws java.text.ParseException {
+        SimpleDateFormat sf = new SimpleDateFormat(DATE_FORMAT);
+        sf.setLenient(true);
+        return sf.parse(twitterDate);
     }
 
     /*

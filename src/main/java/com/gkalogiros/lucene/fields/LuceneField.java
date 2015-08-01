@@ -5,7 +5,8 @@ public enum LuceneField {
     ID("id"),
     USER("user"),
     MESSAGE("message"),
-    DATE("date");
+    DATE("date"),
+    SENTIMENT("sentiment");
 
     public String NAME;
 

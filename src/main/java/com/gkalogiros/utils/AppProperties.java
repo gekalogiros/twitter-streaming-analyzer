@@ -1,14 +1,14 @@
-package com.gkalogiros.twitter;
+package com.gkalogiros.utils;
 
 import java.io.InputStream;
 import java.util.Properties;
 
-public class TwitterProperties {
+public class AppProperties {
 
-    static private TwitterProperties instance = null;
-    static public String appToken, appSecret, consumerKey, consumerSecret, searchTerm;
+    static private AppProperties instance = null;
+    static public String appToken, appSecret, consumerKey, consumerSecret, searchTerm, alchemyKey;
 
-    private TwitterProperties()
+    private AppProperties()
     {
         try
         {
@@ -31,13 +31,14 @@ public class TwitterProperties {
         consumerKey = props.getProperty("consumer.key");
         consumerSecret = props.getProperty("consumer.secret");
         searchTerm = props.getProperty("search.term");
+        alchemyKey = props.getProperty("alchemy.key");
     }
 
-    static public TwitterProperties instance()
+    static public AppProperties instance()
     {
         if (instance == null)
         {
-            instance = new TwitterProperties();
+            instance = new AppProperties();
         }
         return instance;
     }

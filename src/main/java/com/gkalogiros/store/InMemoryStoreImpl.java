@@ -111,6 +111,7 @@ public class InMemoryStoreImpl implements Store<Tweet> {
         doc.add(createStringField(USER, tweet.getUsername()));
         doc.add(createTextField(MESSAGE, tweet.getContent()));
         doc.add(createDateField(DATE, date));
+        doc.add(createScoringField(SENTIMENT, tweet.getScore()));
 
         return doc;
     }
@@ -123,6 +124,11 @@ public class InMemoryStoreImpl implements Store<Tweet> {
     private Field createTextField(final LuceneField field, final String value)
     {
         return new Field(field.NAME, value, createTermVectorFieldType());
+    }
+
+    private Field createScoringField(final LuceneField field, final double score)
+    {
+        return new DoubleField(field.NAME, score, Field.Store.YES);
     }
 
     private FieldType createTermVectorFieldType()

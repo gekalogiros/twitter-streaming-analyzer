@@ -3,7 +3,6 @@ package com.gkalogiros.utils;
 import com.gkalogiros.lucene.fields.LuceneField;
 import com.gkalogiros.models.Statistics;
 import com.gkalogiros.models.Tweet;
-import com.gkalogiros.twitter.TwitterProperties;
 import com.google.common.collect.*;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
@@ -68,17 +67,26 @@ public class LuceneUtils {
         final Multiset<String> users = LinkedHashMultiset.create();
 
         int totalTweets = topDocs.totalHits;
+        double sentiment = 0;
+
+        Document document;
+        String user;
+        TermsEnum words;
         for (ScoreDoc scoreDoc : topDocs.scoreDocs)
         {
-            final String user = extractUserName(indexSearcher, scoreDoc);
+            document = indexSearcher.doc(scoreDoc.doc);
+
+            user = extractUserName(document);
             users.add(user);
 
-            final TermsEnum words = extractTermsEnum(indexReader, scoreDoc);
+            sentiment += extractSentiment(document);
+
+            words = extractTermsEnum(indexReader, scoreDoc);
             BytesRef byteRef = null;
             while ((byteRef = words.next()) != null)
             {
                 final String term = new String(byteRef.bytes, byteRef.offset, byteRef.length);
-                final String searchTerm = TwitterProperties.searchTerm;
+                final String searchTerm = AppProperties.searchTerm;
                 // Filter words for unwanted terms e.g urls or the initial search term.
                 if (term.equalsIgnoreCase(searchTerm)) continue;
                 terms.add(term.toLowerCase());
@@ -88,14 +96,17 @@ public class LuceneUtils {
         return new Statistics(
                 Multisets.copyHighestCountFirst(users).entrySet(),
                 Multisets.copyHighestCountFirst(terms).entrySet(),
-                totalTweets
+                totalTweets,
+                sentiment/totalTweets
         );
     }
 
-    private static String extractUserName(
-            final IndexSearcher indexSearcher, final ScoreDoc scoreDoc) throws IOException {
-        final Document document = indexSearcher.doc(scoreDoc.doc);
+    private static String extractUserName(final Document document) throws IOException {
         return document.get(USER.NAME);
+    }
+
+    private static double extractSentiment(final Document document) throws IOException {
+        return Double.valueOf(document.get(SENTIMENT.NAME));
     }
 
     private static TermsEnum extractTermsEnum(
