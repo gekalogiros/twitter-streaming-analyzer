@@ -45,7 +45,7 @@ public class App {
             Tweet tweetWithSentiment = analyzer.addSentiment(tweet);
 
             // If it is valid, index the contents
-            if (tweet.isValid()) store.put(tweet);
+            if (tweet.isValid()) store.put(tweetWithSentiment);
         }
     }
 }
